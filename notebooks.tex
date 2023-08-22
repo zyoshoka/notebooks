@@ -1,0 +1,58 @@
+\documentclass[a4paper]{ltjsarticle}
+
+\input{_preamble}
+
+\begin{document}
+
+\title{\texttt{notebooks} リポジトリを支える技術}
+\author{zyoshoka\thanks{\url{https://zyoshoka.com}}\\\texttt{root@zyoshoka.com}}
+\maketitle
+\thispagestyle{firstpage}
+
+この \texttt{notebooks} リポジトリ（\url{https://github.com/zyoshoka/notebooks}）をセットアップするにあたってのメモをここにまとめています。私は\LaTeX をはじめて2年ほどですので、改善点などございましたらリポジトリのIssueないしPull Requestでご指南いただけますと幸いです。
+
+\section{書式}
+
+\subsection{メイン}
+ドキュメントクラスに \texttt{ltjsarticle} を使用します。用紙はA4判です。メインファイルのプリアンブルに \texttt{\textbackslash input\{preamble\}} と入力して \texttt{preamble.tex} を読み込んでおきます。要は使い回しを簡単にするためにこうしているわけです。
+
+ただ、後述の \texttt{fancyhdr} パッケージで設定したページスタイルを最初のページに反映させるため、\texttt{\textbackslash maketitle} のあとに \texttt{\textbackslash thispagestyle\{firstpage\}} をいちいち挿入しています。ダサいのでより良い方法があれば是非教えてください。
+
+\subsection{プリアンブル}
+\texttt{preamble.tex} に書いている内容の説明を順番にしていきます。
+
+Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。フォントは \texttt{luatexja-preset} パッケージで原ノ味フォントを使用するように設定しています。また、行長の補正に \texttt{luatexja-adjust} パッケージを読み込んでいます。
+
+句読点のソース・ファイルへの入力は「\、\。」で行いますが、出力では「、。」となるように設定されています（IMEの設定を変更したくないためこのようにしています）。どうしても元の姿で出力する必要がある場合には \texttt{\textbackslash\、\textbackslash\。} のように入力します。
+
+セクションスタイルは \texttt{titlesec} パッケージで少しイカした感じにしてあります。ページスタイルは \texttt{fancyhdr} パッケージで設定しています（なお、このリポジトリに属する文書は全て片面印刷向けのものであるとします）。箇条書きのスタイルは \texttt{enumitem} パッケージで設定しています。以下のように出力されます。
+\begin{enumerate}
+  \item あいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえお
+
+  あいうえおあいうえおあいうえおあいうえお
+  \item かきくけこ
+\end{enumerate}
+
+定理環境。
+
+\begin{thm}[ねこちゃんの定理]
+  すごい定理。あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+  \begin{enumerate}
+    \item ねこはかわいい。
+    \item とりはねこよりかわいい。
+  \end{enumerate}
+\end{thm}
+\begin{proof}
+  略。
+\end{proof}
+
+コマンド系。$\bbr$ は \texttt{\textbackslash bbr}、$\calo$ は \texttt{\textbackslash calo}、$\scrc$ は \texttt{\textbackslash scrc} といった具合で出るようになっています。
+
+% TODO: いろいろ書く。
+
+\section{その他}
+
+\subsection{git}
+ビルド成果物は全てトラッキングされないように設定しています。なお、PDFファイルはGitHub Actionsによって生成されており \texttt{pdf} ブランチから閲覧できます。
+
+\end{document}

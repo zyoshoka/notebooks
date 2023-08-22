@@ -1,0 +1,36 @@
+name: Build LuaLaTeX Document
+on:
+  push:
+    branches:
+      main
+jobs:
+  build_lualatex_document:
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive
+    steps:
+      - name: Install git
+        run: |
+          apt-get update
+          apt-get install git -y
+      - name: Set up
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Git
+        run: git config --global --add safe.directory $(realpath .)
+      - name: Build LuaLaTeX document and commit PDF file
+        run: |
+          for file in $(find . -name "*.tex" ! -name "_*.tex"); do
+            latexmk -output-directory="$(dirname "$file")" "$file"
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git branch -D pdf || true
+          git checkout -b pdf
+          find . -type f ! -name "*.pdf" ! -path "./.git/*" -exec rm {} \;
+          git add .
+          git commit -m ${{ github.sha }}
+          git push -f origin pdf

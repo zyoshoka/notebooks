@@ -1,0 +1,156 @@
+% font
+\usepackage[haranoaji,deluxe,expert,bold,jis2004]{luatexja-preset}
+
+
+% other extention for LuaTeX-ja
+\usepackage{luatexja-adjust}
+\ltjenableadjust[lineend=extended,priority=true]
+
+\usepackage{luatexja-otf}
+
+
+% fontspec
+\ltjsetparameter{jacharrange={-2,-3}}
+\usepackage{luatexja-fontspec}
+
+
+% extended math fonts
+\usepackage[full]{yhmath}
+
+
+% replacing kutoten
+\usepackage{newunicodechar}
+\newunicodechar{、}{，}
+\newunicodechar{。}{．}
+\newcommand{\、}{\char"3001}
+\newcommand{\。}{\char"3002}
+
+
+% section style
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\normalfont}
+  {\mdseries\thesection}
+  {1\zw}
+  {\titlerule\\\Large\bfseries}
+\titleformat*{\subsection}{\large\bfseries}
+\titleformat*{\subsubsection}{\bfseries}
+
+
+% page style
+\usepackage{fancyhdr}
+\fancypagestyle{firstpage}{%
+  \fancyhf{}
+  \fancyhead[L]{}
+  \fancyfoot[C]{―\quad\thepage\quad―}
+  \renewcommand{\headrulewidth}{0pt}
+}
+\fancypagestyle{headings}{%
+  \fancyhf{}
+  \fancyhead[L]{\leftmark}
+  \fancyfoot[C]{―\quad\thepage\quad―}
+}
+\pagestyle{headings}
+
+
+% list style
+\usepackage{enumitem}
+\setlistdepth{1000}
+\setlist[enumerate]{noitemsep,topsep=.5\zw}
+\setlist[enumerate,1]{label={（\arabic*）},leftmargin=2\zw,labelsep=.75\zw,itemindent=1\zw,listparindent=1\zw}
+
+
+% tcolorbox
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins,theorems}
+
+
+% theorem style
+\usepackage{amsthm}
+\theoremstyle{definition}
+
+\newtheorem{thm}{定理}[section]
+\tcolorboxenvironment{thm}{
+  enhanced,
+  colframe=black, colback=white,
+  coltitle=black, fonttitle=\bfseries, separator sign none,
+  description color=black,
+  sharp corners,
+  frame hidden, borderline={.1\zw}{0mm}{black,dotted},
+  boxsep=0mm, top=.5\zw, bottom=.5\zw, left=.9\zw, right=1\zw, middle=.5\zw,
+  breakable
+}
+
+% proof style
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item\relax
+        {%\itshape
+  #1。%\@addpunct{.}
+  }\hspace\labelsep\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+\tcolorboxenvironment{proof}{
+  enhanced,
+  colframe=black, colback=white,
+  coltitle=black, fonttitle=\bfseries, separator sign none,
+  description color=black,
+  sharp corners,
+  frame hidden, borderline east={.5pt}{0mm}{black},
+  boxsep=0mm, top=0mm, bottom=0mm, left=1\zw, right=1\zw, middle=.5\zw,
+  breakable}
+\renewcommand{\proofname}{\bfseries 証明}
+
+
+% hypertext marks
+\usepackage{hyperref}
+
+
+% URL
+\usepackage{url}
+
+
+% ipsum
+\usepackage{lipsum}
+
+
+% amsfonts
+\usepackage{mathtools,amssymb}
+
+
+% displaystyle
+\newcommand{\sfrac}[2]{\genfrac{}{}{}{0}{\,#1\,}{\,#2\,}}
+\newcommand{\dinf}{\displaystyle\inf}
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\dlim}{\displaystyle\lim}
+\newcommand{\dmax}{\displaystyle\max}
+\newcommand{\dmin}{\displaystyle\min}
+\newcommand{\dprod}{\displaystyle\prod}
+\newcommand{\dsum}{\displaystyle\sum}
+\newcommand{\dsup}{\displaystyle\sup}
+
+
+% generate abbreviations for mathbb, bm, mathcal, and mathrsfs
+\usepackage{bm}
+\usepackage{mathrsfs}
+\directlua{
+  local command_mapping = {
+    ["bb"] = "mathbb",
+    ["bm"] = "bm",
+    ["cal"] = "mathcal",
+    ["scr"] = "mathscr",
+  }
+
+  for command, replacement in pairs(command_mapping) do
+    for charCode = string.byte('a'), string.byte('z') do
+      local char = string.char(charCode)
+      tex.print("\\newcommand{\\" .. command .. char .. "}{\\" .. replacement .. "{" .. char:upper() .. "}}")
+    end
+  end
+}
