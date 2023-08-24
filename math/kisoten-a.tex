@@ -1,0 +1,296 @@
+\documentclass[a4paper]{ltjsarticle}
+
+\input{../_preamble}
+
+\begin{document}
+
+\title{基礎数学からの展開A ノート}
+\author{zyoshoka}
+\maketitle
+\thispagestyle{firstpage}
+
+この資料は、京都大学OCWウェブサイトに掲載されている、京都大学教授（当時）雪江明彦氏の授業「基礎数学からの展開A」（2015年）の講義資料を一部改変して作成されたものであり、オリジナルの講義資料の著作権は雪江氏に帰属します。
+
+\section{群の表現の定義}
+
+代数学の基本として群と環と体があるが、この授業では群と環と環上の加群を扱い、体は扱わない。群の表現論の初歩の部分は授業で教えてもらえることが少ないので、これを講義のテーマに選んだ。群の表現にも有限群の表現とリー群（とはいっても本当は代数群）の表現とがあるが、これらは全然様子が違う。例えば、考えているものは $\frks_n$ といった対称群が典型的な有限群であるけれども、リー群であれば $\SL_n(\bbc)$ といった特殊線形群といったふうに、2つの側面がある。授業のうち最初の5回は有限群に充て、証明をしつつ4回目と5回目くらいに具体例を紹介する。リー群に関しては、最後の方に証明抜きで大まかな説明をする。
+
+\begin{dfn}[群]
+  集合 $G\neq\emptyset$ が群（group）であるとは、写像 $\varphi\colon G\times G\to G$ があり（今後 $\varphi(a,\,b)$ を $ab$ と書くこととする）、次の条件を満たすことをいう。
+  \begin{enumerate}
+    \item $\exists e\in G,\,\forall a\in G,\,ae = ea = a$（$e$ を単位元という。）
+    \item $\forall a\in G,\,\exists b\in G,\,ab = ba = e$（$b = a^{-1}$ を逆元という。）
+    \item $\forall a,\,b,\,c\in G,\,(ab)c = a(bc)$（結合法則という。）
+  \end{enumerate}
+  さらに $\forall a,\,b\in G,\,ab = ba$ を満たすならば、$G$ を可換群あるいはアーベル群という。このときには $a + b$ と書くこともある。
+\end{dfn}
+
+\begin{exm}\leavevmode
+  \begin{enumerate}
+    \item $\bbz$、$\bbq$、$\bbr$、$\bbc$ は通常の加法で群である。単位元は $0$ である。
+    \item $\bbr^\times = \bbr\setminus\{0\} = \{r\in\bbr\mid r\neq 0\}$ は乗法に関して群である。
+  \end{enumerate}
+\end{exm}
+
+% 水分子の話
+
+物理現象というのは何らかのベクトル空間の元によって表される。物理とかで群の表現が登場するのだろうと思っている。対称性はどのように表されるかというと、安定化群で表される。後ほど定義される。
+
+\begin{dfn}[環]
+  $A$ が環（ring）であるとは、2つの演算 $+,\,\cdot$ があり次の条件を満たすことをいう。
+  \begin{enumerate}
+    \item $A$ が $+$ に関して可換群となる（$0$ を単位元）。
+    \item $\forall a,\,b,\,c\in A,\,a(b+c) = ab + ac,\,(a+b)c = ac + bc$（分配法則という。）
+    \item 乗法に関して単位元が存在する。
+    \item 乗法に関して結合法則が成り立つ。
+  \end{enumerate}
+  さらに $\forall a,\,b\in A,\,ab = ba$ なら $A$ を可換環であるという。可換環でない環を非可換環という。
+\end{dfn}
+
+\begin{rem}
+環に $R$ ではなく $A$ を用いるのは、局所化において $S^{-1}$ を用いるのだが、$R$ を使ってしまうと $S$ は次の文字でありこれが使えなくなってしまうからである。
+\end{rem}
+
+この授業では非可換環を扱うことが多い。
+
+% 板書のA非可換って、何
+
+\begin{exm}
+  $\bbz$、$\bbq$、$\bbr$、$\bbc$ はすべて可換環である。$\M_n(\bbc)$ は $n\times n$ 行列全体の集合だが、これは非可換環である。
+\end{exm}
+
+\begin{dfn}[環上の加群]
+  $A$ を $+,\,\cdot$ についての環、$V$ を $+$ についての可換群とする。このとき $V$ が左 $A$ 加群であるとは、$\varphi\colon A\times V\to V$ があり（今後 $\varphi(a,\,v)$ を $av$ と書くこととする）、次を満たすことをいう。
+  \begin{enumerate}
+    \item $\forall a,\,b\in A,\,\forall x,\,y\in V,\,a(x+y) = ax + ay,\,(a+b)x = ax + bx$（分配法則）
+    \item $\forall a,\,b\in A,\,\forall x\in V,\,a(bx) = (ab)x$\label{hidari-ketugou}
+    \item $1x = x$
+  \end{enumerate}
+  なお、$\varphi(a,\,v)$ を $va$ と書いて\cref{hidari-ketugou}を $(xa)b = x(ab)$ としたとき右加群という。
+\end{dfn}
+
+\begin{exm}
+  $A = \bbr,\,\bbc$ のとき、$A$ 加群とはベクトル空間のことである。ベクトル空間というのは環上の加群の特別な場合だったのである。
+\end{exm}
+
+\begin{dfn}[乗法群]
+  $A$ を環としたとき $A$ の乗法群 $A^\times$ を
+  \begin{equation}
+    A^\times = \{a\in A\mid\exists b\in A,\,ab=ba=1\}
+  \end{equation}
+  で定義する。
+\end{dfn}
+
+\begin{exm}
+  $A=\bbz$ のとき $A^\times = \{\pm 1\}$、$A=\bbr$ のとき $A^\times = \bbr^\times$、$A=\bbc$ のとき $\bbc^\times$ である。また $A=\M_n(\bbc)$ のとき $A^\times = \GL_n(\bbc)$ である。ここで $\GL_n(\bbc)$ は正則行列全体の集合である。
+\end{exm}
+
+\begin{dfn}[群の準同型]
+  $G,\,H$ を群とする。$\varphi\colon G\to H$ が準同型とは$\forall a,\,b\in G,\,\varphi(ab) = \varphi(a)\varphi(b)$ を満たすことをいう。また $\varphi$ が全単射であれば $\varphi$ は同型という。
+\end{dfn}
+
+表現は準同型の例にあたる。
+
+$V$ を $\bbc$ 上のベクトル空間とする。このとき $\GL(V)$ を全単射で線形写像であるような $T\colon V\to V$ 全体の集合とする。このとき $\GL(V)$ は合成に関して群である。$V = \bbc^n$ のとき $\GL(V)\cong\GL_n(\bbc)$ である。なお $\cong$ は同型であることを表す。
+
+\begin{dfn}[群の表現]
+  $G$ を群、$V$ を $\bbc$ 上のベクトル空間とするとき、準同型 $\varphi\colon G\to\GL(V)$ を $G$ の $V$ 上の表現という。
+\end{dfn}
+
+\begin{exm}
+  $G = \bbc^\times$、$V = \bbc^3$ とする。このとき写像
+  \begin{equation}
+    G\times V\ni(a,\,\bmx)\longmapsto\begin{bmatrix}
+      ax_1\\
+      x_2\\
+      a^{-1}x_3
+    \end{bmatrix}\in V
+  \end{equation}
+  は $\GL_3(\bbc)$ に属する正則行列で表せる。なぜなら
+  \begin{equation}
+    \begin{bmatrix}
+      ax_1\\
+      x_2\\
+      a^{-1}x_3
+    \end{bmatrix} = \begin{bmatrix}
+      a & 0 & 0\\
+      0 & 1 & 0\\
+      0 & 0 & a^{-1}
+    \end{bmatrix}\begin{bmatrix}
+      x_1\\
+      x_2\\
+      x_3
+    \end{bmatrix}
+  \end{equation}
+  と表せるので
+  \begin{equation}
+    G\ni a\longmapsto\begin{bmatrix}
+      a&&\\
+      &1&\\
+      &&a^{-1}
+    \end{bmatrix}\in\GL_3(\bbc)
+  \end{equation}
+  を考えていることに対応するからである。ここで、$a,\,b\in\bbc^\times$ について
+  \begin{equation}
+    \begin{bmatrix}
+      a&&\\
+      &1&\\
+      &&a^{-1}
+    \end{bmatrix}\begin{bmatrix}
+      b&&\\
+      &1&\\
+      &&b^{-1}
+    \end{bmatrix} = \begin{bmatrix}
+      ab&&\\
+      &1&\\
+      &&(ab)^{-1}
+    \end{bmatrix}
+  \end{equation}
+  となるので、この写像は積の構造を保っている。したがってこの写像は準同型であり、群 $\bbc^\times$ の表現となる。
+\end{exm}
+
+なぜ群の表現を考えるのか。ある非可換な群を理解しようと思ったときに、これを分かりやすい対象を使って表そうとしたとき、この対象も非可換な群でなければならない。ここで $\GL_n(\bbc)$ は非可換な群の典型的な例であるが、この群は行列の成分などを使って具体的な計算ができる場合もある。よって、ある非可換な群から、どちらかと言えば分かりやすい $\GL_n(\bbc)$ への準同型を沢山考えれば理解が深まるというのが一つのモチベーションである。
+
+% TODO: 有限群、埋め込み、？？
+
+非可換な群として、対称群というのがある。
+
+\begin{dfn}[対称群]
+  集合 $X_n = \{1,\,\dotsc,\,n\}$ に対して、$X_n$ から $X_n$ への全単射全体を $\frks_n$ と書き、$n$ 次対称群という。$\frks_n$ の元を $n$ 次の置換という。
+\end{dfn}
+
+\begin{rem}
+  $\frks_n$ は写像の合成に関して群になる。
+\end{rem}
+
+$1,\,\dotsc,\,n$ の行き先が $i_1,\,\dotsc,\,i_n$ であれば
+\begin{equation}
+  \begin{pmatrix}
+    1&2&\cdots&n\\
+    i_1&i_2&\cdots&i_n
+  \end{pmatrix}
+\end{equation}
+と書くこととする。
+
+\begin{exm}
+  \begin{gather}
+    \begin{pmatrix}
+      1&2&3\\
+      2&3&1
+    \end{pmatrix}\begin{pmatrix}
+      1&2&3\\
+      2&1&3
+    \end{pmatrix} = \begin{pmatrix}
+      1&2&3\\
+      3&2&1
+    \end{pmatrix}\\
+    \begin{pmatrix}
+      1&2&3&4\\
+      4&1&2&3
+    \end{pmatrix}^{-1} = \begin{pmatrix}
+      4&1&2&3\\
+      1&2&3&4
+    \end{pmatrix} = \begin{pmatrix}
+      1&2&3&4\\
+      2&3&4&1
+    \end{pmatrix}
+  \end{gather}
+\end{exm}
+
+\begin{exm}[巡回置換]
+  $\sigma\in\frks_5$ で $\sigma\colon 1\to 2\to 3\to 1,\,4\to 4,\,5\to 5$ というのは $3$ 次の巡回置換と呼ばれ $\sigma = (1\quad 2\quad 3)$ と書く。$\sigma = (2\quad 3)$ などの $2$ 次の巡回置換は互換とも呼ばれる。 % TODO:
+\end{exm}
+
+\begin{rem}
+  群の単位元、逆元は一意的に定まる（証明は省略する）。
+\end{rem}
+
+\begin{exm}
+  $V = \left\{\bmx = \nbl\begin{bmatrix}
+    x_1\\
+    \vdots\\
+    x_n
+  \end{bmatrix}\in\bbc^n\cvert{4}x_1 + \dotsb + x_n = 0\right\}\subset\bbc^n$ とする。このとき $\sigma\in\frks_n$、$\bmx$ に対して
+  \begin{equation}
+    \rho(\sigma)\bmx\coloneqq\begin{bmatrix}
+      x_{\rho^{-1}(1)}\\
+      \vdots\\
+      x_{\rho^{-1}(n)}
+    \end{bmatrix}
+  \end{equation}
+  と定義する。これは明らかに全単射で線形写像である。ここで $x_1 + \dotsb + x_n = 0$ より $x_{\rho^{-1}(1)} + \dotsb + x_{\rho^{-1}(n)} = 0$ であるから $\rho(\sigma)\colon V\to V$ である。したがって、$\rho(\sigma)\in\GL(V)$ である。
+\end{exm}
+
+\begin{prop}
+  $\rho\colon\frks_n\to\GL(V)$ は表現である。
+\end{prop}
+
+\begin{proof}
+  $\sigma,\,\tau\in\frks_n$、$\bmx\in V$、$\bmy = \rho(\tau)\bmx$ とする。このとき $y_i = x_{\tau^{-1}(i)}$ である。このとき
+  \begin{equation}
+    \begin{aligned}
+      \left(\rho(\sigma)\bmy\right)_i ={}&y_{\sigma^{-1}(i)}\\
+      ={}&x_{\tau^{-1}\left(\sigma^{-1}(i)\right)}\\
+      ={}&x_{\tau^{-1}\sigma^{-1}(i)}
+    \end{aligned}
+  \end{equation}
+  である。ここで $\sigma\tau\tau^{-1}\sigma^{-1} = 1$ に注意すれば $\tau^{-1}\sigma^{-1} = (\sigma\tau)^{-1}$ であるので
+  \begin{equation}
+    \begin{aligned}
+      \left(\rho(\sigma)\rho(\tau)\bmx\right)_i = x_{(\sigma\tau)^{-1}(i)}
+    \end{aligned}
+  \end{equation}
+  すなわち $\rho(\sigma)\rho(\tau)\bmx = \rho(\sigma\tau)\bmx$ であり、$\rho$ は準同型である。
+\end{proof}
+
+\begin{exm}
+  $V = \left\{\nbl\begin{bmatrix}
+    x_1\\ x_2\\ x_3
+  \end{bmatrix}\cvert{4}x_1 + x_2 + x_3 = 0\right\}$ の基底として、例えば $\bmv_1 = \nbl\begin{bmatrix}
+    1\\ 0\\ -1
+  \end{bmatrix},\,\bmv_2 = \nbl\begin{bmatrix}
+    0\\ 1\\ -1
+  \end{bmatrix}$ がとれる。このとき $\sigma = (1\quad 2)$ は
+  \begin{align}
+    &\bmv_1\longmapsto\begin{bmatrix}
+      0\\ 1\\ -1
+    \end{bmatrix} = \bmv_2&&\bmv_2\longmapsto\begin{bmatrix}
+      1\\ 0\\ -1
+    \end{bmatrix} = \bmv_1
+  \end{align}
+  であるので、基底に関する表現行列は
+  \begin{equation}
+    \rho(\sigma) \longleftrightarrow \begin{bmatrix}
+      0&1\\ 1&0
+    \end{bmatrix}
+  \end{equation}
+  である。また $\tau = (1\quad 2\quad 3)$ とすれば
+  \begin{align}
+    &\bmv_1\longmapsto\begin{bmatrix}
+      -1\\ 1\\ 0
+    \end{bmatrix} = -\bmv_1 + \bmv_2&&\bmv_2\longmapsto\begin{bmatrix}
+      -1\\ 0\\ 1
+    \end{bmatrix} = -\bmv_2
+  \end{align}
+  であるので、基底に関する表現行列は
+  \begin{equation}
+    \tau(\sigma)\longleftrightarrow\begin{bmatrix}
+      -1&-1\\ 1&0
+    \end{bmatrix}
+  \end{equation}
+  である。
+\end{exm}
+
+%\section{表現の指標}
+
+%\section{誘導表現}
+
+%\section{フロベニウスの相互律}
+
+%\section{対称群の表現とヤング図形}
+
+%\section{一般線形群の最高ウェイト表現とヤング図形}
+
+%\section{Littlewood-Richardson rule}
+
+\end{document}

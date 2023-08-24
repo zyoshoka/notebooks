@@ -1,0 +1,83 @@
+{
+  //  "amsthm.neko": {
+  //    "prefix": "\\neko",
+  //    "body": [
+  //      "\\begin{neko}",
+  //      "  $0",
+  //      "\\end{neko}"
+  //    ],
+  //    "description": "amsthm.neko"
+  //  },
+  "amsthm.thm": {
+    "prefix": "\\thm",
+    "body": [
+      "\\begin{thm}",
+      "  $0",
+      "\\end{thm}"
+    ],
+    "description": "amsthm.thm"
+  },
+  "amsthm.lem": {
+    "prefix": "\\lem",
+    "body": [
+      "\\begin{lem}",
+      "  $0",
+      "\\end{lem}"
+    ],
+    "description": "amsthm.lem"
+  },
+  "amsthm.prop": {
+    "prefix": "\\prop",
+    "body": [
+      "\\begin{prop}",
+      "  $0",
+      "\\end{prop}"
+    ],
+    "description": "amsthm.prop"
+  },
+  "amsthm.cor": {
+    "prefix": "\\cor",
+    "body": [
+      "\\begin{cor}",
+      "  $0",
+      "\\end{cor}"
+    ],
+    "description": "amsthm.cor"
+  },
+  "amsthm.conj": {
+    "prefix": "\\conj",
+    "body": [
+      "\\begin{conj}",
+      "  $0",
+      "\\end{conj}"
+    ],
+    "description": "amsthm.conj"
+  },
+  "amsthm.dfn": {
+    "prefix": "\\dfn",
+    "body": [
+      "\\begin{dfn}",
+      "  $0",
+      "\\end{dfn}"
+    ],
+    "description": "amsthm.dfn"
+  },
+  "amsthm.rem": {
+    "prefix": "\\rem",
+    "body": [
+      "\\begin{rem}",
+      "  $0",
+      "\\end{rem}"
+    ],
+    "description": "amsthm.rem"
+  },
+  "amsthm.exm": {
+    "prefix": "\\exm",
+    "body": [
+      "\\begin{exm}",
+      "  $0",
+      "\\end{exm}"
+    ],
+    "description": "amsthm.exm"
+  },
+}
