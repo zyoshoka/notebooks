@@ -21,7 +21,7 @@
 \subsection{プリアンブル}
 \texttt{\_preamble.tex} に書いている内容の説明を順番にしていきます。
 
-Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。フォントは \texttt{luatexja-preset} パッケージで原ノ味フォントを使用するように設定しています。また、行長の補正に \texttt{luatexja-adjust} パッケージを読み込んでいます。
+Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。フォントは \texttt{luatexja-preset} パッケージで原ノ味フォントを使用するように設定しています。また、行長の補正に \texttt{luatexja-adjust} パッケージを読み込んでいます。また \texttt{otf}、\texttt{fontspec} パッケージに対応するパッケージとしてそれぞれ \texttt{luatexja-otf}、\texttt{luatexja-fontspec} パッケージを読み込んであります。
 
 句読点のソース・ファイルへの入力は「\、\。」で行いますが、出力では「、。」となるように設定されています（IMEの設定を変更したくないためこのようにしています）。どうしても元の姿で出力する必要がある場合には \texttt{\string\、\string\。} のように入力します。
 
@@ -33,7 +33,7 @@ Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。�
   \item かきくけこ
 \end{enumerate}
 
-定理環境。この他には、補題、命題、系、予想、定義、注、例を用意しています。
+定理環境に \texttt{amsthm} パッケージを用いますが、枠がほしいので \texttt{tcolorbox} パッケージも併用しています。この他には、補題、命題、系、予想、定義、注、例を用意しています。
 \begin{thm}[ねこちゃんの定理]
   すごい定理。あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
   \begin{enumerate}
@@ -62,11 +62,14 @@ Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。�
 
 コマンド系。$\bbr$ は \texttt{\string\bbr}、$\bmv$ は \texttt{\string\bmv}、$\calo$ は \texttt{\string\calo}、$\scrc$ は \texttt{\string\scrc}、$\frks$ は $\texttt{\string\frks}$ といった具合で出るようになっています。
 
-% TODO: いろいろ書く。
+他にも複数のパッケージを読み込んで複数のコマンドを定義してありますが、それらについては特筆すべきことがないので省略します。
 
 \section{その他}
 
 \subsection{Git}
-ビルド成果物は全てトラッキングされないように設定しています。なお、PDFファイルはGitHub Actionsによって生成されており \texttt{pdf} ブランチから閲覧できます。
+ビルド成果物は全てトラッキングされないように設定しています。なお、\texttt{.pdf} ファイルはGitHub Actionsによって生成されており \texttt{pdf} ブランチから閲覧できます。
+
+\subsection{GitHub Actions}
+\texttt{main} ブランチに \texttt{push} されたとき実行されるようになっています。具体的には、\texttt{\_} で始まるファイル名のものを除く全ての \texttt{.tex} ファイルについて \texttt{.latexmkrc} ファイルでの記述に基づいたビルドが実行され、生成された全ての \texttt{.pdf} ファイルだけが（ディレクトリ構造を保ったまま）\texttt{pdf} ブランチへコミットされます。
 
 \end{document}
