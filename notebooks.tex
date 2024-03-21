@@ -14,16 +14,16 @@
 \section{書式}
 
 \subsection{メイン}
-ドキュメントクラスに \texttt{ltjsarticle} を使用します。用紙はA4判です。メインファイルのプリアンブルに \texttt{\textbackslash input\{preamble\}} と入力して \texttt{preamble.tex} を読み込んでおきます。要は使い回しを簡単にするためにこうしているわけです。
+ドキュメントクラスに \texttt{ltjsarticle} を使用します。用紙はA4判です。メインファイルのプリアンブルに \texttt{\string\input\{\_preamble\}} と入力して \texttt{\_preamble.tex} を読み込んでおきます。要は使い回しを簡単にするためにこうしているわけです。
 
-ただ、後述の \texttt{fancyhdr} パッケージで設定したページスタイルを最初のページに反映させるため、\texttt{\textbackslash maketitle} のあとに \texttt{\textbackslash thispagestyle\{firstpage\}} をいちいち挿入しています。ダサいのでより良い方法があれば是非教えてください。
+ただ、後述の \texttt{fancyhdr} パッケージで設定したページスタイルを最初のページに反映させるため、\texttt{\string\maketitle} のあとに \texttt{\string\thispagestyle\{firstpage\}} をいちいち挿入しています。ダサいのでより良い方法があれば是非教えてください。
 
 \subsection{プリアンブル}
-\texttt{preamble.tex} に書いている内容の説明を順番にしていきます。
+\texttt{\_preamble.tex} に書いている内容の説明を順番にしていきます。
 
 Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。フォントは \texttt{luatexja-preset} パッケージで原ノ味フォントを使用するように設定しています。また、行長の補正に \texttt{luatexja-adjust} パッケージを読み込んでいます。
 
-句読点のソース・ファイルへの入力は「\、\。」で行いますが、出力では「、。」となるように設定されています（IMEの設定を変更したくないためこのようにしています）。どうしても元の姿で出力する必要がある場合には \texttt{\textbackslash\、\textbackslash\。} のように入力します。
+句読点のソース・ファイルへの入力は「\、\。」で行いますが、出力では「、。」となるように設定されています（IMEの設定を変更したくないためこのようにしています）。どうしても元の姿で出力する必要がある場合には \texttt{\string\、\string\。} のように入力します。
 
 セクションスタイルは \texttt{titlesec} パッケージで少しイカした感じにしてあります。ページスタイルは \texttt{fancyhdr} パッケージで設定しています（なお、このリポジトリに属する文書は全て片面印刷向けのものであるとします）。箇条書きのスタイルは \texttt{enumitem} パッケージで設定しています。以下のように出力されます。
 \begin{enumerate}
@@ -33,8 +33,7 @@ Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。�
   \item かきくけこ
 \end{enumerate}
 
-定理環境。
-
+定理環境。この他には、補題、命題、系、予想、定義、注、例を用意しています。
 \begin{thm}[ねこちゃんの定理]
   すごい定理。あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
   \begin{enumerate}
@@ -46,13 +45,28 @@ Lua\LaTeX-jaの拡張パッケージをいくつか読み込んでいます。�
   略。
 \end{proof}
 
-コマンド系。$\bbr$ は \texttt{\textbackslash bbr}、$\calo$ は \texttt{\textbackslash calo}、$\scrc$ は \texttt{\textbackslash scrc} といった具合で出るようになっています。
+行列。括弧の丸みがかわいいですね。
+\begin{equation}
+  {\begin{pmatrix}
+    1 & 2 & 3
+  \end{pmatrix}}{\begin{pmatrix}
+    4 \\ 5 \\ 6
+  \end{pmatrix}} = 32
+\end{equation}
+
+集合。\texttt{\string\set*\{x\string\given\string\exists\ n\string\in\string\bbn, x = 2n\}} みたいに書くと $\set*{x\given\exists n\in\bbn, x = 2n}$ となります。何が嬉しいかというと
+\begin{equation}
+  \set*{(r, \theta)\given 0\leq r\leq 1, 0\leq\theta\leq\sfrac{\pi}{2}}
+\end{equation}
+のように括弧と縦棒のサイズが中身に応じて自動で調整されるようになっているわけです。
+
+コマンド系。$\bbr$ は \texttt{\string\bbr}、$\bmv$ は \texttt{\string\bmv}、$\calo$ は \texttt{\string\calo}、$\scrc$ は \texttt{\string\scrc}、$\frks$ は $\texttt{\string\frks}$ といった具合で出るようになっています。
 
 % TODO: いろいろ書く。
 
 \section{その他}
 
-\subsection{git}
+\subsection{Git}
 ビルド成果物は全てトラッキングされないように設定しています。なお、PDFファイルはGitHub Actionsによって生成されており \texttt{pdf} ブランチから閲覧できます。
 
 \end{document}

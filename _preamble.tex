@@ -26,6 +26,15 @@
 \newcommand{\。}{\char"3002}
 
 
+% space after comma
+% https://tex.stackexchange.com/questions/676840/take-space-after-comma-in-math-mode
+\AtBeginDocument{%
+  \mathchardef\stdcomma=\mathcode`,
+  \mathcode`,="8000
+}
+\begingroup\lccode`~=`, \lowercase{\endgroup\def~}{\stdcomma\,}
+
+
 % section style
 \usepackage{titlesec}
 \titleformat{\section}[block]
@@ -70,16 +79,39 @@
 \theoremstyle{definition}
 
 \newtheorem{thm}{定理}[section]
-\tcolorboxenvironment{thm}{
-  enhanced,
-  colframe=black, colback=white,
-  coltitle=black, fonttitle=\bfseries, separator sign none,
-  description color=black,
-  sharp corners,
-  frame hidden, borderline={.1\zw}{0mm}{black,dotted},
-  boxsep=0mm, top=.5\zw, bottom=.5\zw, left=.9\zw, right=1\zw, middle=.5\zw,
-  breakable
+\newtheorem{lem}[thm]{補題}
+\newtheorem{prop}[thm]{命題}
+\newtheorem{cor}[thm]{系}
+\newtheorem{conj}[thm]{予想}
+\newtheorem{dfn}[thm]{定義}
+\newtheorem{rem}[thm]{注}
+\newtheorem{exm}[thm]{例}
+\tcbset{
+  common/.style={
+    enhanced,
+    colframe=black, colback=white,
+    coltitle=black, fonttitle=\bfseries, separator sign none,
+    description color=black,
+    sharp corners, frame hidden,
+    boxsep=0mm, left=.9\zw, right=1\zw, middle=.5\zw,
+    breakable
+  },
+  commonthm/.style={
+    top=.5\zw, bottom=.5\zw, borderline={.1\zw}{0mm}{black,dotted}
+  },
+  commonproof/.style={
+    top=0mm, bottom=0mm, borderline east={.5pt}{0mm}{black},
+  }
 }
+\tcolorboxenvironment{thm}{common,commonthm}
+\tcolorboxenvironment{lem}{common,commonthm}
+\tcolorboxenvironment{prop}{common,commonthm}
+\tcolorboxenvironment{cor}{common,commonthm}
+\tcolorboxenvironment{conj}{common,commonthm}
+\tcolorboxenvironment{dfn}{common,commonthm}
+\tcolorboxenvironment{rem}{common,commonthm}
+\tcolorboxenvironment{exm}{common,commonthm}
+
 
 % proof style
 \makeatletter
@@ -96,20 +128,18 @@
 }
 \makeatother
 
-\tcolorboxenvironment{proof}{
-  enhanced,
-  colframe=black, colback=white,
-  coltitle=black, fonttitle=\bfseries, separator sign none,
-  description color=black,
-  sharp corners,
-  frame hidden, borderline east={.5pt}{0mm}{black},
-  boxsep=0mm, top=0mm, bottom=0mm, left=1\zw, right=1\zw, middle=.5\zw,
-  breakable}
+\tcolorboxenvironment{proof}{common,commonproof}
 \renewcommand{\proofname}{\bfseries 証明}
 
 
 % hypertext marks
 \usepackage{hyperref}
+
+
+% cleveref
+\usepackage{cleveref}
+\crefname{equation}{式}{式}
+\crefname{enumi}{}{}
 
 
 % URL
@@ -136,7 +166,29 @@
 \newcommand{\dsup}{\displaystyle\sup}
 
 
-% generate abbreviations for mathbb, bm, mathcal, and mathrsfs
+% roman abbrev
+\newcommand{\GL}{\text{GL}}
+\newcommand{\M}{\text{M}}
+\newcommand{\SL}{\text{SL}}
+
+
+% set-builder
+% https://tex.stackexchange.com/questions/253077/how-do-you-create-a-set-in-latex
+\DeclarePairedDelimiterX\set[1]\lbrace\rbrace{\def\given{\;\delimsize\vert\;}#1}
+
+
+% array
+% https://github.com/texjporg/jsclasses/issues/61
+\newcommand{\nbl}{\narrowbaselines}
+\everymath=\expandafter{\the\everymath \narrowbaselines}
+
+
+% lineskip
+\setlength{\lineskiplimit}{4pt}
+\setlength{\lineskip}{4pt}
+
+
+% generate abbreviations for mathbb, bm, mathcal, mathrsfs, and mathfrak
 \usepackage{bm}
 \usepackage{mathrsfs}
 \directlua{
@@ -145,12 +197,13 @@
     ["bm"] = "bm",
     ["cal"] = "mathcal",
     ["scr"] = "mathscr",
+    ["frk"] = "mathfrak",
   }
 
   for command, replacement in pairs(command_mapping) do
     for charCode = string.byte('a'), string.byte('z') do
-      local char = string.char(charCode)
-      tex.print("\\newcommand{\\" .. command .. char .. "}{\\" .. replacement .. "{" .. char:upper() .. "}}")
+      local char = command == "bm" and string.char(charCode) or string.char(charCode):upper()
+      tex.print("\\newcommand{\\" .. command .. char:lower() .. "}{\\" .. replacement .. "{" .. char .. "}}")
     end
   end
 }
