@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-$lualatex = 'lualatex -shell-escape -synctex=1 -interaction=nonstopmode -recorder %O %S';
+$lualatex = 'lualatex -f -shell-escape -synctex=1 -interaction=nonstopmode -recorder %O %S';
 $biber = 'biber --bblencoding=utf8 -u -U --output_safechars %O %B';
 $bibtex = 'pbibtex %O %B';
 $makeindex = 'mendex %O -o %D %S';

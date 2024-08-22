@@ -2,6 +2,10 @@
 \usepackage[haranoaji,deluxe,expert,bold,jis2004]{luatexja-preset}
 
 
+% Lua scripting
+\usepackage{luacode}
+
+
 % other extension for LuaTeX-ja
 \usepackage{luatexja-adjust}
 \ltjenableadjust[lineend=extended,priority=true]
@@ -154,15 +158,25 @@
 
 
 % cleveref
-\usepackage{cleveref}
-\crefname{appendix}{付録}{付録}
-\crefname{equation}{式}{式}
-\crefname{enumi}{}{}
-\crefname{figure}{図}{図}
-\crefname{section}{節}{節}
-\crefname{table}{表}{表}
-\crefname{listing}{ソースコード}{ソースコード}
-\crefname{wakunasimondai}{問題}{問題}
+\usepackage[noabbrev]{cleveref}
+\begin{luacode*}
+  -- \verb|
+  local cref_mapping = {
+    ["appendix"] = "付録",
+    ["equation"] = "式",
+    ["enumi"] = "",
+    ["figure"] = "図",
+    ["section"] = "節",
+    ["table"] = "表",
+    ["listing"] = "ソースコード",
+    ["wakunasimondai"] = "問題",
+  }
+
+  for cref, label in pairs(cref_mapping) do
+    tex.sprint("\\crefname{" .. cref .. "}{" .. label .. "}{" .. label .. "}")
+    tex.sprint("\\crefformat{" .. cref .. "}{" .. label .. "#2#1#3}")
+  end -- |
+\end{luacode*}
 \newcommand{\crefrangeconjunction}{\horizontalbar}
 \newcommand{\crefpairconjunction}{、}
 \newcommand{\crefmiddleconjunction}{、}
