@@ -2,7 +2,7 @@
 \usepackage[haranoaji,deluxe,expert,bold,jis2004]{luatexja-preset}
 
 
-% other extention for LuaTeX-ja
+% other extension for LuaTeX-ja
 \usepackage{luatexja-adjust}
 \ltjenableadjust[lineend=extended,priority=true]
 
@@ -67,6 +67,7 @@
 \setlistdepth{1000}
 \setlist[enumerate]{noitemsep,topsep=.5\zw}
 \setlist[enumerate,1]{label={（\arabic*）},leftmargin=2\zw,labelsep=.75\zw,itemindent=1\zw,listparindent=1\zw}
+\setlist[itemize]{noitemsep,topsep=.5\zw}
 
 
 % tcolorbox
@@ -86,6 +87,10 @@
 \newtheorem{dfn}[thm]{定義}
 \newtheorem{rem}[thm]{注}
 \newtheorem{exm}[thm]{例}
+\newtheorem{mondai}{問題}
+\newtheorem*{mondai*}{問題}
+\newtheorem{wakunasimondai}{問題}
+\newtheorem*{wakunasimondai*}{問題}
 \tcbset{
   common/.style={
     enhanced,
@@ -94,6 +99,7 @@
     description color=black,
     sharp corners, frame hidden,
     boxsep=0mm, left=.9\zw, right=1\zw, middle=.5\zw,
+    before upper={\parindent=1\zw},
     breakable
   },
   commonthm/.style={
@@ -111,25 +117,36 @@
 \tcolorboxenvironment{dfn}{common,commonthm}
 \tcolorboxenvironment{rem}{common,commonthm}
 \tcolorboxenvironment{exm}{common,commonthm}
+\tcolorboxenvironment{mondai}{common,commonthm}
+\tcolorboxenvironment{mondai*}{common,commonthm}
+% \tcolorboxenvironment{wakunasimondai}{common}
 
 
 % proof style
-\makeatletter
-\renewenvironment{proof}[1][\proofname]{\par
-  \pushQED{\qed}%
-  \normalfont \topsep6\p@\@plus6\p@\relax
-  \trivlist
-  \item\relax
-        {%\itshape
-  #1。%\@addpunct{.}
-  }\hspace\labelsep\ignorespaces
-}{%
-  \popQED\endtrivlist\@endpefalse
-}
-\makeatother
+% \makeatletter
+% \renewenvironment{proof}[1][\proofname]{\par
+%   \pushQED{\qed}%
+%   \normalfont \topsep6\p@\@plus6\p@\relax
+%   \trivlist
+%   \item\relax
+%         {%\itshape
+%   #1。%\@addpunct{.}
+%   }\hspace\labelsep\ignorespaces
+% }{%
+%   \popQED\endtrivlist\@endpefalse
+% }
+% \makeatother
 
 \tcolorboxenvironment{proof}{common,commonproof}
 \renewcommand{\proofname}{\bfseries 証明}
+
+
+% makes table useful
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{booktabs}
+\usepackage{csvsimple}
+\usepackage{supertabular}
 
 
 % hypertext marks
@@ -138,12 +155,31 @@
 
 % cleveref
 \usepackage{cleveref}
+\crefname{appendix}{付録}{付録}
 \crefname{equation}{式}{式}
 \crefname{enumi}{}{}
+\crefname{figure}{図}{図}
+\crefname{section}{節}{節}
+\crefname{table}{表}{表}
+\crefname{listing}{ソースコード}{ソースコード}
+\crefname{wakunasimondai}{問題}{問題}
+\newcommand{\crefrangeconjunction}{\horizontalbar}
+\newcommand{\crefpairconjunction}{、}
+\newcommand{\crefmiddleconjunction}{、}
+\newcommand{\creflastconjunction}{、}
 
 
 % URL
 \usepackage{url}
+
+
+% BibLaTeX
+\usepackage{biblatex}
+
+
+% tategaki
+% https://qiita.com/zr_tex8r/items/6f0b88c5838c42241457
+\usepackage{lltjext}
 
 
 % ipsum
@@ -152,6 +188,104 @@
 
 % amsfonts
 \usepackage{mathtools,amssymb}
+
+
+% SI units
+\usepackage{siunitx}
+\sisetup{
+  separate-uncertainty,
+  per-mode=symbol,
+  input-digits = 0123456789\pi,
+  uncertainty-mode = separate,
+  output-open-uncertainty = [,
+  output-close-uncertainty = ],
+  uncertainty-separator = \,,
+  separate-uncertainty-units = bracket,
+}
+
+
+% multi columns
+\usepackage{multicol}
+
+
+% TikZ
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,petri,positioning}
+\usepackage{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+\usepackage{shellesc}
+\usepackage{gnuplottex}
+\usepackage{gnuplot-lua-tikz}
+
+% https://tex.stackexchange.com/questions/36147/how-do-i-get-the-gnuplottex-epstopdf-package-to-work-with-output-dir-and-au
+\usepackage{etoolbox}
+\let\nodirfigname\figname
+\def\figname{./out/\nodirfigname}
+\expandafter\patchcmd\csname\string\gnuplot\endcsname
+  {\figname}{\nodirfigname}{}{}
+
+
+% wrapfig
+\usepackage{wrapfig}
+
+% https://tex.stackexchange.com/questions/111393/too-much-space-around-wrap-figure
+\setlength{\intextsep}{0pt}
+\setlength{\columnsep}{0pt}
+
+
+% subfigure
+\usepackage{subcaption}
+
+
+% define minipage environment with an unknown width
+% use case: https://stackoverflow.com/questions/59551243/how-to-align-an-enumerated-list-in-latex
+\usepackage{varwidth}
+\newenvironment{centered}{
+  \begin{center}
+    \begin{varwidth}{\textwidth}
+}{
+    \end{varwidth}
+  \end{center}
+}
+
+
+% multicolumn itemize
+% reduce margin of the environment
+\newenvironment{multicolsitemize}[1]{
+  \vspace*{-.5\multicolsep}
+  \begin{multicols}{#1}
+    \begin{itemize}
+}{
+    \end{itemize}
+  \end{multicols}
+  \vspace*{-.5\multicolsep}
+}
+
+
+% tweaking vertical space
+\newcommand{\tweak}[1]{\vspace{#1\zw}}
+
+
+% kintou
+\newcommand{\kintou}[2]{\texorpdfstring{\kintouwidth{#1\zw}{#2}}{#2}}
+% 美文書作成入門に載ってるもの
+% fancyhdr の中に入るとうまくいかないので使えないのてとりあえず下で我慢
+% \newcommand{\kintouwidth}[2]{\leavevmode\hbox to #1{%
+%   \ltjsetparameter{kanjiskip=0pt plus 1fill minus 1fill}%
+%   \ltjsetparameter{xkanjiskip=\ltjgetparameter{kanjiskip}}%
+%   #2}}
+% \makeatletter
+\newcommand{\kintouwidth}[2]{\makebox[#1][s]{#2}}
+
+
+% mask
+% https://tex.stackexchange.com/questions/548426/how-to-make-text-appear-in-the-middle-of-a-phantom-in-math-mode
+\usepackage{calc}
+\newcommand*{\mask}[2]{%
+  \makebox[\widthof{\(#1\)}]{\(#2\)}%
+}
 
 
 % displaystyle
@@ -166,15 +300,29 @@
 \newcommand{\dsup}{\displaystyle\sup}
 
 
+% horizontal bar
+\newcommand{\horizontalbar}{\symbol{8213}}
+
+
 % roman abbrev
 \newcommand{\GL}{\text{GL}}
 \newcommand{\M}{\text{M}}
 \newcommand{\SL}{\text{SL}}
 
 
+% op
+\DeclareMathOperator{\ch}{char}
+\DeclareMathOperator{\id}{id}
+
+
 % set-builder
 % https://tex.stackexchange.com/questions/253077/how-do-you-create-a-set-in-latex
 \DeclarePairedDelimiterX\set[1]\lbrace\rbrace{\def\given{\;\delimsize\vert\;}#1}
+
+
+% round function
+% https://tex.stackexchange.com/questions/433101/rounding-to-nearest-integer-symbol-in-latex
+\DeclarePairedDelimiter{\nint}{\lfloor}{\rceil}
 
 
 % array
@@ -196,6 +344,7 @@
     ["bb"] = "mathbb",
     ["bm"] = "bm",
     ["cal"] = "mathcal",
+    ["rm"] = "mathrm",
     ["scr"] = "mathscr",
     ["frk"] = "mathfrak",
   }
@@ -207,3 +356,44 @@
     end
   end
 }
+
+
+% https://tex.stackexchange.com/a/548869
+\usepackage{ifthen}
+\usepackage{currfile-abspath}
+\getabspath{\jobname.tex}
+\ifthenelse{\equal{\theabsdir}{\thepwd}}% using ifthen package
+%\ifdefstrequal{\theabsdir}{\thepwd}% using etoolbox package
+    {\PassOptionsToPackage{outputdir={out}}{minted}}{\PassOptionsToPackage{outputdir={\theabsdir/out}}{minted}}
+
+
+% see for setup
+% https://zenn.dev/nac_39/scraps/25ffb7d0747a9d
+% \directlua の前に置くと何故かエラーを吐く
+\usepackage{minted}
+\definecolor{bg}{rgb}{0.97,0.97,0.97}
+\setminted{
+  baselinestretch=.75,
+  bgcolor=bg,
+  breaklines,
+  breakanywhere,
+  gobble=2,
+}
+\renewcommand{\listingscaption}{ソースコード}
+\usepackage{caption}
+\captionsetup[listing]{labelsep=quad}
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+
+% prevent caption 1zw sep overwritten
+% (maybe overwritten by `subcaption` package?)
+% @see texmf-dist/tex/luatex/luatexja/ltjsarticle.cls
+\makeatletter
+\long\def\@makecaption#1#2{{\small
+  \advance\leftskip .0628\linewidth
+  \advance\rightskip .0628\linewidth
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#1{\hskip1\zw}#2}%
+  \ifdim \wd\@tempboxa <\hsize \centering \fi
+  #1{\hskip1\zw}#2\par
+  \vskip\belowcaptionskip}}
+\makeatother

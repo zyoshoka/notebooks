@@ -1,0 +1,17 @@
+name: Delete temporary pdf branch
+on:
+  pull_request:
+    types:
+      - closed
+jobs:
+  delete_pdf_branch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Delete PDF branch
+      run: git push -d origin $PDF_BRANCH
+      env:
+        PDF_BRANCH: ${{ format('{0}-pdf', github.event.pull_request.head.ref) }}

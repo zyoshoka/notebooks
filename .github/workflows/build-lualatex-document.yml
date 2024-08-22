@@ -1,36 +1,89 @@
 name: Build LuaLaTeX Document
 on:
   push:
-    branches:
-      main
+    branches: main
+  pull_request_target:
+    types: review_requested
 jobs:
   build_lualatex_document:
     runs-on: ubuntu-latest
-    container:
-      image: texlive/texlive
+    container: texlive/texlive
+    # See https://gitlab.com/islandoftex/images/texlive/container_registry/573747
+    # container: registry.gitlab.com/islandoftex/images/texlive:TL2024-2024-08-18-full
     steps:
-      - name: Install git
+      - name: Update packages with tlmgr
+        shell: bash
         run: |
-          apt-get update
-          apt-get install git -y
+          retry() {
+            local max_attempts="$1"; shift
+            local cmd="$@"
+            local attempt_num=1
+            until $cmd; do
+              if (( attempt_num == max_attempts )); then
+                return 1
+              else
+                sleep $(( attempt_num++ ))
+              fi
+            done
+          }
+          retry 5 tlmgr update --self
+          retry 5 tlmgr update --all
       - name: Set up
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up Git
         run: git config --global --add safe.directory $(realpath .)
-      - name: Build LuaLaTeX document and commit PDF file
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Set up Pygments
+        run: python -m pip install Pygments
+      - name: Set up gnuplot
+        shell: bash
         run: |
+          cd /usr/local/texlive/texmf-local/tex/latex/
+          mkdir gnuplot && cd gnuplot
+          echo 'set terminal tikz createstyle' | gnuplot
+          mktexlsr
+      - name: Build LuaLaTeX document and commit PDF file
+        shell: bash
+        run: |
+          git switch $BRANCH
+          cp .latexmkrc ~/.latexmkrc
+
           for file in $(find . -name "*.tex" ! -name "_*.tex"); do
-            latexmk -output-directory="$(dirname "$file")" "$file"
+            if [[ "$file" = *"/tikz/"* ]]; then
+              cd "$(dirname "$file")"
+              latexmk "$(basename "$file")"
+              cd -
+            fi
+          done
+
+          for file in $(find . -name "*.tex" ! -name "_*.tex"); do
+            if [[ "$file" != *"/tikz/"* ]]; then
+              cd "$(dirname "$file")"
+              latexmk "$(basename "$file")"
+              cd -
+            fi
+          done
+
+          for file in $(find . -type f -name "*.pdf" -path "*/out/*"); do
+            cd "$(dirname "$file")"
+            mv "$(basename "$file")" ..
+            cd -
           done
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git branch -D pdf || true
-          git checkout -b pdf
+          git branch -D $PDF_BRANCH || true
+          git checkout -b $PDF_BRANCH
           find . -type f ! -name "*.pdf" ! -path "./.git/*" -exec rm {} \;
           git add .
           git commit -m ${{ github.sha }}
-          git push -f origin pdf
+          git push -f origin $PDF_BRANCH
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref && github.event.pull_request.head.ref || 'main' }}
+          PDF_BRANCH: ${{ github.event.pull_request.head.ref && format('{0}-pdf', github.event.pull_request.head.ref) || 'pdf' }}
