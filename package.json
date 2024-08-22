@@ -1,0 +1,33 @@
+{
+  "name": "notebooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zyoshoka/notebooks.git"
+  },
+  "scripts": {
+    "lint": "textlint --cache '**/*.tex'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "CC0-1.0",
+  "private": true,
+  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
+  "devDependencies": {
+    "@textlint-ja/textlint-rule-no-synonyms": "^1.3.0",
+    "@textlint-rule/textlint-rule-no-invalid-control-character": "^3.0.0",
+    "sudachi-synonyms-dictionary": "^14.0.0",
+    "textlint": "^14.0.5",
+    "textlint-filter-rule-comments": "^1.2.2",
+    "textlint-plugin-latex2e": "^1.2.1",
+    "textlint-rule-ja-no-redundant-expression": "^4.0.1",
+    "textlint-rule-max-ten": "^5.0.0",
+    "textlint-rule-no-doubled-conjunction": "^3.0.0",
+    "textlint-rule-no-doubled-joshi": "^5.1.0",
+    "textlint-rule-no-dropping-the-ra": "^3.0.0",
+    "textlint-rule-no-mix-dearu-desumasu": "^6.0.2",
+    "textlint-rule-no-nfd": "^2.0.2"
+  }
+}
